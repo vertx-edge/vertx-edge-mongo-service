@@ -15,7 +15,7 @@
   </properties>
 
   <dependencies>
-    <!-- Commons -->
+    <!-- Core -->
     <dependency>
       <groupId>com.vertx.edge</groupId>
       <artifactId>core</artifactId>
