@@ -64,7 +64,6 @@ public class MongoService implements RecordService {
     config.put("socketTimeoutMS", config.getLong("socketTimeoutMS", DEFAULT_READ_TIMEOUT));
     config.put("connectTimeoutMS", config.getLong("connectTimeoutMS", DEFAULT_CONNECTION_TIMEOUT));
 
-    Secret.clear(config);
     Secret.getUsernameAndPassword(vertx, config).onComplete(res -> {
       if (res.succeeded()) {
         promise.complete(config.mergeIn(res.result()));
