@@ -56,7 +56,6 @@ public class MongoService implements RecordService {
   }
 
   private static Future<JsonObject> buildMongoOptions(Vertx vertx, JsonObject config) {
-    Promise<JsonObject> promise = Promise.promise();
     if (config.containsKey("connection_string"))
       log.warn("If the connection string is used the mongo client will ignore any driver configuration options.");
 
@@ -64,14 +63,6 @@ public class MongoService implements RecordService {
     config.put("socketTimeoutMS", config.getLong("socketTimeoutMS", DEFAULT_READ_TIMEOUT));
     config.put("connectTimeoutMS", config.getLong("connectTimeoutMS", DEFAULT_CONNECTION_TIMEOUT));
 
-    Secret.getUsernameAndPassword(vertx, config).onComplete(res -> {
-      if (res.succeeded()) {
-        promise.complete(config.mergeIn(res.result()));
-      } else {
-        promise.fail(res.cause());
-      }
-    });
-
-    return promise.future();
+    return Secret.getUsernameAndPassword(vertx, config).compose(v -> Future.succeededFuture(config.mergeIn(v)));
   }
 }
